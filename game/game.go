@@ -30,6 +30,7 @@ type Game struct {
 	Canvas [][]int
 	Snake  snake
 	Mochi  point
+	Score  int
 }
 
 func NewGame(width, height int) *Game {
@@ -47,6 +48,7 @@ func NewGame(width, height int) *Game {
 		canvas,
 		snake,
 		mochi,
+		0,
 	}
 }
 
@@ -70,6 +72,7 @@ func (g *Game) UpdateGameState() {
 	if newPoint == g.Mochi {
 		g.Snake.Body = append([]point{g.Mochi}, g.Snake.Body[0:]...)
 		g.Mochi = g.newMochiPosition()
+		g.Score += 1
 	} else {
 		g.Snake.Body = append([]point{newPoint}, g.Snake.Body[:len(g.Snake.Body)-1]...)
 	}

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/vgnh/snake-go/game"
-
+	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
+	"github.com/vgnh/snake-go/game"
 )
 
 const (
@@ -52,7 +52,10 @@ func drawGameUI(game *game.Game) {
 		}
 	}
 
-	rl.DrawText("Press ESC to exit", WIDTH/2.5, 1, 20, rl.LightGray)
+	// Draw score
+	rl.DrawText(fmt.Sprintf("Score: %v", game.Score), 0, 0, 20, rl.Beige)
+
+	rl.DrawText("Press ESC to exit", WIDTH/2.5, 0, 20, rl.LightGray)
 
 	// Draw snake
 	for _, point := range game.Snake.Body {
