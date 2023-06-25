@@ -1,7 +1,7 @@
 package main
 
 import (
-	"snake-go/game"
+	"github.com/vgnh/snake-go"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
@@ -13,7 +13,7 @@ const (
 
 func main() {
 	rl.InitWindow(WIDTH, HEIGHT, "snake go")
-	rl.SetTargetFPS(10)
+	rl.SetTargetFPS(12)
 
 	game := game.NewGame(WIDTH, HEIGHT)
 
@@ -31,10 +31,12 @@ func main() {
 			game.UpdateSnakeDirection(game.Down())
 		case rl.KeyLeft:
 			game.UpdateSnakeDirection(game.Left())
+		case rl.KeyEscape:
+			break
 		case 0:
 		}
-		drawGameUI(game)
 		game.UpdateGameState()
+		drawGameUI(game)
 
 		rl.EndDrawing()
 	}
@@ -50,6 +52,8 @@ func drawGameUI(game *game.Game) {
 		}
 	}
 
+	rl.DrawText("Press ESC to exit", WIDTH/2.5, 1, 20, rl.LightGray)
+
 	// Draw snake
 	for _, point := range game.Snake.Body {
 		rl.DrawRectangle(int32(point.X*10), int32(point.Y*10), 10, 10, rl.SkyBlue)
@@ -57,5 +61,4 @@ func drawGameUI(game *game.Game) {
 
 	// Draw mochi
 	rl.DrawCircle(int32((game.Mochi.X*10)+5), int32((game.Mochi.Y*10)+5), 5, rl.Orange)
-	//rl.DrawRectangle(int32(game.Mochi.X*10), int32(game.Mochi.Y*10), 10, 10, rl.Orange)
 }

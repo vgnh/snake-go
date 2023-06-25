@@ -1,4 +1,4 @@
-module snake-go
+module github.com/vgnh/snake-go
 
 go 1.20
 
