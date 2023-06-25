@@ -13,7 +13,7 @@ const (
 
 func main() {
 	rl.InitWindow(WIDTH, HEIGHT, "snake go")
-	rl.SetTargetFPS(12)
+	rl.SetTargetFPS(10)
 
 	game := game.NewGame(WIDTH, HEIGHT)
 
@@ -58,8 +58,12 @@ func drawGameUI(game *game.Game) {
 	rl.DrawText("Press ESC to exit", WIDTH/2.5, 0, 20, rl.LightGray)
 
 	// Draw snake
-	for _, point := range game.Snake.Body {
-		rl.DrawRectangle(int32(point.X*10), int32(point.Y*10), 10, 10, rl.SkyBlue)
+	for i, point := range game.Snake.Body {
+		color := rl.SkyBlue
+		if i == 0 {
+			color = rl.Blue
+		}
+		rl.DrawRectangle(int32(point.X*10), int32(point.Y*10), 10, 10, color)
 	}
 
 	// Draw mochi
