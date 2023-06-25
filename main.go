@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/vgnh/snake-go"
+	"github.com/vgnh/snake-go/game"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
