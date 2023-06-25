@@ -7,21 +7,32 @@ import (
 )
 
 const (
-	WIDTH = 800
+	WIDTH  = 800
 	HEIGHT = 450
 )
 
 func main() {
 	rl.InitWindow(WIDTH, HEIGHT, "snake go")
-
-	rl.SetTargetFPS(60)
+	rl.SetTargetFPS(10)
 
 	game := game.NewGame(WIDTH, HEIGHT)
+
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.SkyBlue)
 		rl.DrawText("This is the base canvas!", WIDTH/3, HEIGHT/2.25, 20, rl.White)
 
+		switch rl.GetKeyPressed() {
+		case rl.KeyUp:
+			game.UpdateSnakeDirection(game.Up())
+		case rl.KeyRight:
+			game.UpdateSnakeDirection(game.Right())
+		case rl.KeyDown:
+			game.UpdateSnakeDirection(game.Down())
+		case rl.KeyLeft:
+			game.UpdateSnakeDirection(game.Left())
+		case 0:
+		}
 		drawGameUI(game)
 		game.UpdateGameState()
 
@@ -41,9 +52,10 @@ func drawGameUI(game *game.Game) {
 
 	// Draw snake
 	for _, point := range game.Snake.Body {
-		rl.DrawRectangle(point.X*10, point.Y*10, 10, 10, rl.SkyBlue)
+		rl.DrawRectangle(int32(point.X*10), int32(point.Y*10), 10, 10, rl.SkyBlue)
 	}
 
 	// Draw mochi
-	rl.DrawRectangle(game.Mochi.X*10, game.Mochi.Y*10, 10, 10, rl.Orange)
+	rl.DrawCircle(int32((game.Mochi.X*10)+5), int32((game.Mochi.Y*10)+5), 5, rl.Orange)
+	//rl.DrawRectangle(int32(game.Mochi.X*10), int32(game.Mochi.Y*10), 10, 10, rl.Orange)
 }

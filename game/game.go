@@ -1,6 +1,8 @@
 package game
 
-import "time"
+import (
+	"math/rand"
+)
 
 const (
 	TEN = 10
@@ -9,14 +11,14 @@ const (
 type direction int32
 
 const (
-	NORTH direction = iota
-	EAST
-	SOUTH
-	WEST
+	UP direction = iota
+	RIGHT
+	DOWN
+	LEFT
 )
 
 type point struct {
-	X, Y int32
+	X, Y int
 }
 
 type snake struct {
@@ -37,10 +39,10 @@ func NewGame(width, height int) *Game {
 		canvas[i] = make([]int, width/TEN)
 	}
 	snake := snake{
-		[]point{{20, 0}, {21, 0}},
-		WEST,
+		[]point{{20, 20}, {21, 20}, {22, 20}},
+		LEFT,
 	}
-	mochi := point{10, 0}
+	mochi := point{10, 20}
 
 	return &Game{
 		canvas,
@@ -51,18 +53,85 @@ func NewGame(width, height int) *Game {
 }
 
 func (g *Game) UpdateGameState() {
-	for i := range g.Snake.Body {
-		switch g.Snake.direction {
-		case NORTH:
-			g.Snake.Body[i].Y -= 1
-		case EAST:
-			g.Snake.Body[i].X += 1
-		case SOUTH:
-			g.Snake.Body[i].Y += 1
-		case WEST:
-			g.Snake.Body[i].X -= 1
-		}
+	newPoint := g.Snake.Body[0]
+	switch g.Snake.direction {
+	case UP:
+		newPoint.Y -= 1
+	case RIGHT:
+		newPoint.X += 1
+	case DOWN:
+		newPoint.Y += 1
+	case LEFT:
+		newPoint.X -= 1
 	}
 
-	time.Sleep(time.Millisecond * time.Duration(g.speed))
+	if (newPoint.X >= len(g.Canvas[0]) || newPoint.X < 0) || (newPoint.Y >= len(g.Canvas) || newPoint.Y < 0) {
+		return
+	}
+
+	if newPoint == g.Mochi {
+		g.Snake.Body = append([]point{g.Mochi}, g.Snake.Body[0:]...)
+		g.Mochi = g.newMochiPosition()
+		g.speed -= 50
+		if g.speed <= 0 {
+			g.speed = 1
+		}
+	} else {
+		g.Snake.Body = append([]point{newPoint}, g.Snake.Body[:len(g.Snake.Body)-1]...)
+	}
+}
+
+func (g *Game) newMochiPosition() point {
+	for {
+		y := rand.Intn(len(g.Canvas))
+		x := rand.Intn(len(g.Canvas[y]))
+
+		pointIsSafe := true
+		for _, v := range g.Snake.Body {
+			if v.X == x && v.Y == y {
+				pointIsSafe = false
+				break
+			}
+		}
+
+		if pointIsSafe {
+			return point{
+				x,
+				y,
+			}
+		}
+	}
+}
+
+func (g *Game) UpdateSnakeDirection(d direction) {
+	switch {
+	case g.Snake.direction == UP && d == DOWN:
+		fallthrough
+	case g.Snake.direction == DOWN && d == UP:
+		fallthrough
+	case g.Snake.direction == LEFT && d == RIGHT:
+		fallthrough
+	case g.Snake.direction == RIGHT && d == LEFT:
+		fallthrough
+	case g.Snake.direction == d:
+		return
+	default:
+		g.Snake.direction = d
+	}
+}
+
+func (g *Game) Up() direction {
+	return UP
+}
+
+func (g *Game) Down() direction {
+	return DOWN
+}
+
+func (g *Game) Left() direction {
+	return LEFT
+}
+
+func (g *Game) Right() direction {
+	return RIGHT
 }
