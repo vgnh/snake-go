@@ -18,5 +18,6 @@ Or you can also:
 ```bash
 git clone git@github.com:vgnh/snake-go.git
 cd ./snake-go
+go mod tidy
 go run .
 ```
